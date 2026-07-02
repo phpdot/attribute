@@ -22,7 +22,7 @@ use Throwable;
 final class ReflectionScanner
 {
     /**
-     * @param list<class-string> $classes
+     * @param list<string> $classes
      * @param list<class-string> $filter
      * @param list<string> $directories
      */
@@ -35,6 +35,15 @@ final class ReflectionScanner
         $classMap = [];
 
         foreach ($classes as $className) {
+            if (
+                !class_exists($className)
+                && !interface_exists($className)
+                && !trait_exists($className)
+                && !enum_exists($className)
+            ) {
+                continue;
+            }
+
             $ref = new ReflectionClass($className);
 
             $structureType = $this->resolveStructureType($ref);

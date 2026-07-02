@@ -548,6 +548,18 @@ final class ReflectionScannerTest extends TestCase
         self::assertGreaterThan(0, count($routeAttrs));
     }
 
+    #[Test]
+    public function unloadableClassIsSkippedNotThrown(): void
+    {
+        /** @var class-string $missing */
+        $missing = 'PHPdot\\Attribute\\Tests\\Fixtures\\NoSuchClass';
+
+        $map = $this->scanner->scan([$missing, AnnotatedController::class]);
+
+        self::assertNull($map->getClass($missing));
+        self::assertNotNull($map->getClass(AnnotatedController::class));
+    }
+
     // --- Inherited member filtering ---
 
     #[Test]
